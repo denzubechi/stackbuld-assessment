@@ -45,8 +45,10 @@ export default function DashboardPage() {
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
             <SelectItem value="Electronics">Electronics</SelectItem>
-            <SelectItem value="Fashion">Fashion</SelectItem>
-            <SelectItem value="Home Appliances">Home Appliances</SelectItem>
+            <SelectItem value="Clothing">Clothing</SelectItem>
+            <SelectItem value="Home">Home Appliances</SelectItem>
+            <SelectItem value="Toys">Toys</SelectItem>
+            <SelectItem value="Books">Books</SelectItem>
           </SelectContent>
         </Select>
       </div>
