@@ -32,10 +32,11 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
   const [title, setTitle] = useState(product?.title || "");
   const [price, setPrice] = useState(product?.price || "");
   const [image, setImage] = useState(product?.image || "");
+  const [description, setDescription] = useState(product?.description || ""); // New description state
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">(product?.status || "ACTIVE");
   const [category, setCategory] = useState(product?.category || categories[0]);
   const [isLoading, setIsLoading] = useState(false);
-  const [imageError, setImageError] = useState<string | null>(null); // State to track image URL validation error
+  const [imageError, setImageError] = useState<string | null>(null);
 
   const validateImageUrl = (url: string) => {
     try {
@@ -60,10 +61,11 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a network request
 
     const newProduct: IProduct = {
-      id: product?.id || `${Date.now()}`, // Create new id if it's a new product
+      id: product?.id || `${Date.now()}`, 
       title,
       price,
       image,
+      description, 
       status,
       category,
       createdAt: product?.createdAt || new Date().toISOString(),
@@ -104,7 +106,16 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
               required
               disabled={isLoading}
             />
-            {imageError && <p className="text-red-500 text-sm">{imageError}</p>} {/* Display image URL error */}
+            {imageError && <p className="text-red-500 text-sm">{imageError}</p>}
+            <textarea
+              placeholder="Product Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              disabled={isLoading}
+              className="border rounded-md p-2"
+              rows={4}
+            />
             <Select
               onValueChange={(value) => setStatus(value as "ACTIVE" | "INACTIVE")}
               defaultValue={status}
