@@ -1,77 +1,38 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductCard } from "./_components/ProductCard";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [products, setProducts] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(3); // Set items per page for pagination
 
-  // Mock product data
-  const products = [
-    {
-      id: 1,
-      name: "Product 1",
-      price: "₦1,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 1.",
-      category: "Electronics",
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      price: "₦2,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 2.",
-      category: "Fashion",
-      rating: 3.8,
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      price: "₦3,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 3.",
-      category: "Home Appliances",
-      rating: 4.2,
-    },
-    {
-      id: 4,
-      name: "Product 4",
-      price: "₦4,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 4.",
-      category: "Fashion",
-      rating: 4.7,
-    },
-    {
-      id: 5,
-      name: "Product 5",
-      price: "₦5,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 5.",
-      category: "Electronics",
-      rating: 3.9,
-    },
-    {
-      id: 6,
-      name: "Product 6",
-      price: "₦6,000",
-      image: "/path-to-your-image/product.png", // Update with correct image path
-      description: "This is the description for Product 6.",
-      category: "Home Appliances",
-      rating: 4.1,
-    },
-  ];
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("products");
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+    }
+  }, []);
 
-  // Filter products by selected category
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const filteredProducts =
     selectedCategory === "all"
       ? products
       : products.filter((product) => product.category === selectedCategory);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const displayedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="self-stretch flex flex-col gap-4 px-16 mt-8 max-md:px-5 max-md:max-w-full">
@@ -91,10 +52,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredProducts.length === 0 ? (
+        {displayedProducts.length === 0 ? (
           <Skeleton className="w-full h-40 bg-gray-400" />
         ) : (
-          filteredProducts.map((product) => (
+          displayedProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -104,6 +65,47 @@ export default function DashboardPage() {
           ))
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6">
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }
+
+// Pagination component
+const Pagination = ({ totalPages, currentPage, onPageChange }: { totalPages: number; currentPage: number; onPageChange: (page: number) => void }) => {
+  return (
+    <div className="flex gap-2">
+      <Button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-4 py-2"
+      >
+        Previous
+      </Button>
+      {[...Array(totalPages)].map((_, i) => (
+        <Button
+          key={i + 1}
+          onClick={() => onPageChange(i + 1)}
+          className={`px-4 py-2 ${currentPage === i + 1 ? "bg-primary text-white" : ""}`}
+        >
+          {i + 1}
+        </Button>
+      ))}
+      <Button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2"
+      >
+        Next
+      </Button>
+    </div>
+  );
+};
