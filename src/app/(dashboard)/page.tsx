@@ -53,7 +53,11 @@ export default function DashboardPage() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {displayedProducts.length === 0 ? (
-          <Skeleton className="w-full h-40 bg-gray-400" />
+          products.length === 0 ? (
+            <p className="text-lg text-center w-full">No products available. Please add some products.</p>
+          ) : (
+            <p className="text-lg text-center w-full">No products found for the selected category.</p>
+          )
         ) : (
           displayedProducts.map((product) => (
             <ProductCard
@@ -66,7 +70,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {totalPages > 1 && (
+      {totalPages > 1 && displayedProducts.length > 0 && (
         <div className="flex justify-center mt-6">
           <Pagination
             totalPages={totalPages}

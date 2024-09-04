@@ -35,13 +35,32 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">(product?.status || "ACTIVE");
   const [category, setCategory] = useState(product?.category || categories[0]);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null); // State to track image URL validation error
+
+  const validateImageUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateImageUrl(image)) {
+      setImageError("Please enter a valid image URL.");
+      return;
+    }
+
+    setImageError(null);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a network request
+
     const newProduct: IProduct = {
-      id: product?.id || `${Date.now()}`,
+      id: product?.id || `${Date.now()}`, // Create new id if it's a new product
       title,
       price,
       image,
@@ -49,6 +68,7 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
       category,
       createdAt: product?.createdAt || new Date().toISOString(),
     };
+
     onSave(newProduct);
     setIsLoading(false);
     setOpen(false);
@@ -84,6 +104,7 @@ export default function CreateEditProductDialog({ product, onSave, children }: C
               required
               disabled={isLoading}
             />
+            {imageError && <p className="text-red-500 text-sm">{imageError}</p>} {/* Display image URL error */}
             <Select
               onValueChange={(value) => setStatus(value as "ACTIVE" | "INACTIVE")}
               defaultValue={status}
