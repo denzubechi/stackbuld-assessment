@@ -9,6 +9,7 @@ export interface IProduct {
   title: string;
   price: string;
   image: string;
+  description: string; 
   status: StatusType;
   createdAt: string;
   category: string;
