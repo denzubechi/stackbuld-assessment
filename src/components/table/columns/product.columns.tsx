@@ -27,23 +27,12 @@ export const productColumns = [
     header: ({ column }) => <Header title="Image" column={column} />,
     cell: (info) => <img src={info.getValue()?.toString()} alt="Product Image" className="w-16 h-16" />, // Display product image
   }),
+  columnHelper.accessor("category", {
+    header: ({ column }) => <Header title="Category" column={column} />,
+    cell: (info) => <span>{info.getValue()?.toString()}</span>,
+  }),
   columnHelper.accessor("status", {
     header: ({ column }) => <Header title="Status" column={column} />,
     cell: (info) => <Status value={info.getValue()} />,
-  }),
-  columnHelper.accessor("id", {
-    cell: (info) => {
-      return (
-        <Actions
-          editFunction={async () => {
-            // edit function
-          }}
-          deleteFunction={async () => {
-            toast({ description: "Product deleted!" });
-          }}
-        />
-      );
-    },
-    header: ({ column }) => <Header title="Actions" column={column} />,
   }),
 ];
