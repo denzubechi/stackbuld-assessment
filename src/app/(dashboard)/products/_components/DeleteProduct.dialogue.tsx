@@ -40,7 +40,7 @@ export default function DeleteProductDialog({ productTitle, onDelete, children }
         <DialogHeader>
           <DialogTitle>Confirm Delete</DialogTitle>
         </DialogHeader>
-        <p>Are you sure you want to delete the product "{productTitle}"?</p>
+        <p>Are you sure you want to delete the product &quot {productTitle}&quot?</p>
         <DialogFooter className="justify-center">
           <Button onClick={() => setOpen(false)} variant="outline">
             Cancel
