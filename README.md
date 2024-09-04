@@ -29,7 +29,7 @@ To get started with **NzubechiCart**, clone the repository and follow the instru
 
 1. **Clone the repository**:
     ```bash
-    git clone [https://github.com/denzubechi/stackbuld-assessment.git]
+    git clone https://github.com/denzubechi/stackbuld-assessment.git
     ```
 2. **Navigate to the project directory**:
     ```bash
